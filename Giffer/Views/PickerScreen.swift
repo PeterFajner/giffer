@@ -1,0 +1,63 @@
+import SwiftUI
+import PhotosUI
+
+struct PickerScreen: View {
+    @State private var selectedItem: PhotosPickerItem? = nil
+    @State private var navigateToEditor = false
+    @State private var isLoading = false
+
+    @Bindable var viewModel: EditorViewModel
+
+    var body: some View {
+        VStack(spacing: 32) {
+            Spacer()
+
+            Image(systemName: "livephoto")
+                .font(.system(size: 80))
+                .foregroundStyle(.secondary)
+
+            Text("Giffer")
+                .font(.largeTitle.bold())
+
+            Text("Convert Live Photos to GIFs")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            PhotosPicker(
+                selection: $selectedItem,
+                matching: .livePhotos,
+                photoLibrary: .shared()
+            ) {
+                Label("Select Live Photo", systemImage: "photo.on.rectangle")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+            }
+            .padding(.horizontal, 40)
+
+            if isLoading {
+                ProgressView("Loading Live Photo...")
+            }
+
+            Spacer()
+        }
+        .navigationDestination(isPresented: $navigateToEditor) {
+            EditScreen(viewModel: viewModel)
+        }
+        .onChange(of: selectedItem) { _, newItem in
+            guard let newItem else { return }
+            isLoading = true
+            Task {
+                if let photo = try? await newItem.loadTransferable(type: PHLivePhoto.self) {
+                    viewModel.loadLivePhoto(photo, assetIdentifier: newItem.itemIdentifier)
+                    navigateToEditor = true
+                }
+                isLoading = false
+                selectedItem = nil
+            }
+        }
+    }
+}
