@@ -47,6 +47,19 @@ final class EditorViewModel {
         exportedData != nil && !isEncoding
     }
 
+    private var lastShareTempURL: URL?
+
+    deinit {
+        encodeTask?.cancel()
+        if let url = lastShareTempURL {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
+    private static func userMessage(_ friendly: String, error: Error) -> String {
+        "\(friendly)\n\(error.localizedDescription)"
+    }
+
     func loadLivePhoto(_ photo: PHLivePhoto) {
         livePhoto = photo
         sharedVideoURL = nil
@@ -74,7 +87,8 @@ final class EditorViewModel {
             videoDuration = result.duration
             scheduleEncode()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = Self.userMessage(
+                "Couldn't read this Live Photo.", error: error)
         }
         isExtracting = false
     }
@@ -106,7 +120,8 @@ final class EditorViewModel {
             exportedData = data
         } catch {
             if !Task.isCancelled {
-                errorMessage = error.localizedDescription
+                errorMessage = Self.userMessage(
+                    "Couldn't encode the GIF.", error: error)
             }
         }
         isEncoding = false
@@ -138,7 +153,8 @@ final class EditorViewModel {
             videoDuration = result.duration
             scheduleEncode()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = Self.userMessage(
+                "Couldn't read the shared video.", error: error)
         }
         isExtracting = false
     }
@@ -154,9 +170,13 @@ final class EditorViewModel {
 
     func tempFileForShare() -> URL? {
         guard let data = exportedData else { return nil }
+        if let prev = lastShareTempURL {
+            try? FileManager.default.removeItem(at: prev)
+        }
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("giffer_export.gif")
+            .appendingPathComponent("giffer-\(UUID().uuidString).gif")
         try? data.write(to: url)
+        lastShareTempURL = url
         return url
     }
 }
