@@ -5,6 +5,7 @@ struct PickerScreen: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var navigateToEditor = false
     @State private var isLoading = false
+    @State private var showAbout = false
 
     @Bindable var viewModel: EditorViewModel
 
@@ -43,6 +44,19 @@ struct PickerScreen: View {
             }
 
             Spacer()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showAbout = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                }
+                .accessibilityLabel("About")
+            }
+        }
+        .sheet(isPresented: $showAbout) {
+            AboutView()
         }
         .navigationDestination(isPresented: $navigateToEditor) {
             EditScreen(viewModel: viewModel)
