@@ -3,7 +3,7 @@ import PhotosUI
 
 struct PickerScreen: View {
     @State private var selectedItem: PhotosPickerItem? = nil
-    @State private var navigateToEditor = false
+    @Binding var editorRoute: UUID?
     @State private var isLoading = false
     @State private var showAbout = false
 
@@ -58,7 +58,7 @@ struct PickerScreen: View {
         .sheet(isPresented: $showAbout) {
             AboutView()
         }
-        .navigationDestination(isPresented: $navigateToEditor) {
+        .navigationDestination(item: $editorRoute) { _ in
             EditScreen(viewModel: viewModel)
         }
         .onChange(of: selectedItem) { _, newItem in
@@ -67,7 +67,7 @@ struct PickerScreen: View {
             Task {
                 if let photo = try? await newItem.loadTransferable(type: PHLivePhoto.self) {
                     viewModel.loadLivePhoto(photo)
-                    navigateToEditor = true
+                    editorRoute = UUID()
                 }
                 isLoading = false
                 selectedItem = nil
