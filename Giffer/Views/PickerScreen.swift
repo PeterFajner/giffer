@@ -52,7 +52,7 @@ struct PickerScreen: View {
             isLoading = true
             Task {
                 if let photo = try? await newItem.loadTransferable(type: PHLivePhoto.self) {
-                    viewModel.loadLivePhoto(photo, assetIdentifier: newItem.itemIdentifier)
+                    viewModel.loadLivePhoto(photo)
                     navigateToEditor = true
                 }
                 isLoading = false
