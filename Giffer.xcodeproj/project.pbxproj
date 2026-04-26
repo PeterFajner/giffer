@@ -22,6 +22,7 @@
 		AA00000C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB00000C /* Assets.xcassets */; };
 		AA00000D /* TrimSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000D /* TrimSliderView.swift */; };
 		AA00000E /* EditorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000E /* EditorTool.swift */; };
+		AA000020 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* AboutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		AB00000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB00000D /* TrimSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimSliderView.swift; sourceTree = "<group>"; };
 		AB00000E /* EditorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTool.swift; sourceTree = "<group>"; };
+		AB000020 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		AC000001 /* Giffer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giffer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				AB000004 /* GIFPreviewView.swift */,
 				AB000005 /* CropOverlayView.swift */,
 				AB00000D /* TrimSliderView.swift */,
+				AB000020 /* AboutView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				AA00000B /* PlaybackMode.swift in Sources */,
 				AA00000D /* TrimSliderView.swift in Sources */,
 				AA00000E /* EditorTool.swift in Sources */,
+				AA000020 /* AboutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
