@@ -6,7 +6,6 @@ import Observation
 @Observable
 final class EditorViewModel {
     var livePhoto: PHLivePhoto?
-    var assetIdentifier: String?
     var config = GIFConfiguration()
     var extractedFrames: [CGImage] = []
     var originalSize: CGSize = .zero
@@ -47,14 +46,9 @@ final class EditorViewModel {
         exportedData != nil && !isEncoding
     }
 
-    func loadLivePhoto(_ photo: PHLivePhoto, assetIdentifier id: String? = nil) {
+    func loadLivePhoto(_ photo: PHLivePhoto) {
         livePhoto = photo
-        assetIdentifier = id
-        if let id, let saved = ConfigStore.shared.load(for: id) {
-            config = saved
-        } else {
-            config = GIFConfiguration()
-        }
+        config = GIFConfiguration()
         Task {
             await extractFrames()
         }
@@ -108,7 +102,6 @@ final class EditorViewModel {
             }.value
             guard !Task.isCancelled else { return }
             exportedData = data
-            saveConfig()
         } catch {
             if !Task.isCancelled {
                 errorMessage = error.localizedDescription
@@ -128,10 +121,5 @@ final class EditorViewModel {
             .appendingPathComponent("giffer_export.gif")
         try? data.write(to: url)
         return url
-    }
-
-    private func saveConfig() {
-        guard let id = assetIdentifier else { return }
-        ConfigStore.shared.save(config, for: id)
     }
 }
