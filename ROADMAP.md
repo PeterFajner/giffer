@@ -16,3 +16,11 @@ Features that are on the horizon but not yet shipped. No commitments on order or
 - **Video files** — accept regular video files (e.g. `.mov`, `.mp4`) as input, in addition to Live Photos.
 - **Still images** — accept a single still image as input (output would be a one-frame GIF, useful as a stepping stone toward burst-photo support).
 - **Auto-trim long videos** — when video import lands, automatically trim any clip longer than 60 seconds to its first minute, with a notice to the user.
+
+## Integration points
+
+- **Photo Editing Extension** — add a `com.apple.photo-editing` extension target so Giffer appears in the Photos app's edit-screen "..." menu. Unlike share/action extensions (which can't read Live Photo video data — see below), Photo Editing Extensions get a `PHContentEditingInput` and can build a `PHLivePhotoEditingContext` with a `frameProcessor` block that delivers every frame of the paired video. The extension would run the existing GIF pipeline against those frames and either save the result to the Photo Library via `PHPhotoLibrary.performChanges` or present a `UIActivityViewController` from inside the extension UI. User flow is 3 taps (photo → Edit → extension button) vs 2 for the share sheet, but it's the only Apple-blessed path that actually works.
+
+## Considered and rejected
+
+- **Share extension for "share Live Photo to Giffer" from Photos.app** — attempted and removed. iOS share extensions cannot extract the paired video component of a Live Photo: `loadObject(ofClass: PHLivePhoto.self)` returns "Could not coerce", and `loadFileRepresentation(forTypeIdentifier: "com.apple.live-photo")` fails with `PHPhotosErrorDomain Code=-1`. This is a longstanding iOS bug (open since iOS 11, Apple Feedback #35325817, still unresolved). Apple's documentation claims it works; in practice it has never worked from extensions. The in-app `PhotosPicker` is the only reliable path. See <https://developer.apple.com/forums/thread/22132> for the decade-long thread.

@@ -9,7 +9,6 @@ Giffer does not collect, transmit, or share any personal data. Everything happen
 ## What Giffer accesses
 
 - **Photos library**: Giffer uses Apple's standard Photos picker (`PHPickerViewController`) to let you choose a Live Photo. The system handles this picker out-of-process; Giffer never gains access to your full Photos library and does not receive a Photos permission grant.
-- **Shared files**: When you share a Live Photo to Giffer from the Photos app, the iOS share extension copies the chosen item into a private app group container so the main app can read it. These files are deleted automatically after one hour or as soon as the operating system reclaims temporary storage.
 
 ## What Giffer stores
 

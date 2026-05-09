@@ -42,14 +42,7 @@ final class LivePhotoExtractor {
     ) async throws -> ExtractionResult {
         let videoURL = try await extractVideoURL(from: livePhoto)
         defer { try? FileManager.default.removeItem(at: videoURL) }
-        return try await extractFrames(fromVideoURL: videoURL, config: config, progress: progress)
-    }
 
-    static func extractFrames(
-        fromVideoURL videoURL: URL,
-        config: GIFConfiguration,
-        progress: @escaping (Double) -> Void
-    ) async throws -> ExtractionResult {
         let asset = AVURLAsset(url: videoURL)
         let duration = try await asset.load(.duration)
         let durationSeconds = CMTimeGetSeconds(duration)

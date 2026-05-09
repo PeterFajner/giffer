@@ -4,17 +4,4 @@
    <FileRef
       location = "self:">
    </FileRef>
-   <Group
-      location = "group:GifferShareExtension"
-      name = "GifferShareExtension">
-      <FileRef
-         location = "group:GifferShareExtension.entitlements">
-      </FileRef>
-      <FileRef
-         location = "group:ShareViewController.swift">
-      </FileRef>
-      <FileRef
-         location = "group:Info.plist">
-      </FileRef>
-   </Group>
 </Workspace>

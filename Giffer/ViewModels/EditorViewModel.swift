@@ -6,7 +6,6 @@ import Observation
 @Observable
 final class EditorViewModel {
     var livePhoto: PHLivePhoto?
-    var sharedVideoURL: URL?
     var config = GIFConfiguration()
     var extractedFrames: [CGImage] = []
     var originalSize: CGSize = .zero
@@ -62,7 +61,6 @@ final class EditorViewModel {
 
     func loadLivePhoto(_ photo: PHLivePhoto) {
         livePhoto = photo
-        sharedVideoURL = nil
         config = GIFConfiguration()
         Task {
             await extractFrames()
@@ -127,45 +125,9 @@ final class EditorViewModel {
         isEncoding = false
     }
 
-    func loadFromVideoURL(_ videoURL: URL) {
-        livePhoto = nil
-        sharedVideoURL = videoURL
-        config = GIFConfiguration()
-        Task {
-            await extractFramesFromVideo(videoURL)
-        }
-    }
-
-    @MainActor
-    func extractFramesFromVideo(_ videoURL: URL) async {
-        isExtracting = true
-        errorMessage = nil
-        exportedData = nil
-
-        do {
-            let result = try await LivePhotoExtractor.extractFrames(
-                fromVideoURL: videoURL,
-                config: config,
-                progress: { _ in }
-            )
-            extractedFrames = result.frames
-            originalSize = result.originalSize
-            videoDuration = result.duration
-            scheduleEncode()
-        } catch {
-            errorMessage = Self.userMessage(
-                "Couldn't read the shared video.", error: error)
-        }
-        isExtracting = false
-    }
-
     @MainActor
     func reExtractIfNeeded() async {
-        if livePhoto != nil {
-            await extractFrames()
-        } else if let videoURL = sharedVideoURL {
-            await extractFramesFromVideo(videoURL)
-        }
+        await extractFrames()
     }
 
     func tempFileForShare() -> URL? {
