@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		8934588F2F7B853900D3E377 /* giffer 2.icon in Resources */ = {isa = PBXBuildFile; fileRef = 8934588E2F7B853900D3E377 /* giffer 2.icon */; };
-		893B80042F9E4F3C000E9BF3 /* GifferShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 893B7FFA2F9E4F3B000E9BF3 /* GifferShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA000001 /* GifferApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001 /* GifferApp.swift */; };
 		AA000002 /* PickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002 /* PickerScreen.swift */; };
 		AA000003 /* EditScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003 /* EditScreen.swift */; };
@@ -24,39 +23,10 @@
 		AA00000D /* TrimSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000D /* TrimSliderView.swift */; };
 		AA00000E /* EditorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000E /* EditorTool.swift */; };
 		AA000020 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* AboutView.swift */; };
-		AA000030 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FD5D762F7C8DCE000E11C8 /* SharedConstants.swift */; };
-		AA000031 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FD5D762F7C8DCE000E11C8 /* SharedConstants.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		893B80022F9E4F3C000E9BF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B2000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 893B7FF92F9E4F3B000E9BF3;
-			remoteInfo = GifferShareExtension;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		893B80052F9E4F3C000E9BF3 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				893B80042F9E4F3C000E9BF3 /* GifferShareExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8934588E2F7B853900D3E377 /* giffer 2.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "giffer 2.icon"; sourceTree = "<group>"; };
-		893B7FFA2F9E4F3B000E9BF3 /* GifferShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GifferShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		89FD5D742F7C8DC1000E11C8 /* Giffer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Giffer.entitlements; sourceTree = "<group>"; };
-		89FD5D762F7C8DCE000E11C8 /* SharedConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
 		AB000001 /* GifferApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifferApp.swift; sourceTree = "<group>"; };
 		AB000002 /* PickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerScreen.swift; sourceTree = "<group>"; };
 		AB000003 /* EditScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreen.swift; sourceTree = "<group>"; };
@@ -75,38 +45,7 @@
 		AC000001 /* Giffer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giffer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		893B80102F9E4F3C000E9BF3 /* Exceptions for "GifferShareExtension" folder in "GifferShareExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-				GifferShareExtension.entitlements,
-			);
-			target = 893B7FF92F9E4F3B000E9BF3 /* GifferShareExtension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		893B7FFB2F9E4F3B000E9BF3 /* GifferShareExtension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				893B80102F9E4F3C000E9BF3 /* Exceptions for "GifferShareExtension" folder in "GifferShareExtension" target */,
-			);
-			explicitFileTypes = {};
-			explicitFolders = ();
-			path = GifferShareExtension;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		893B7FF72F9E4F3B000E9BF3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AD000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,21 +56,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		89FD5D752F7C8DC7000E11C8 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				89FD5D762F7C8DCE000E11C8 /* SharedConstants.swift */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
 		AE000001 = {
 			isa = PBXGroup;
 			children = (
 				AE000002 /* Giffer */,
-				893B7FFB2F9E4F3B000E9BF3 /* GifferShareExtension */,
 				AE000006 /* Products */,
-				89FD5D752F7C8DC7000E11C8 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,7 +74,6 @@
 				AE000007 /* ViewModels */,
 				AB00000C /* Assets.xcassets */,
 				8934588E2F7B853900D3E377 /* giffer 2.icon */,
-				89FD5D742F7C8DC1000E11C8 /* Giffer.entitlements */,
 			);
 			path = Giffer;
 			sourceTree = "<group>";
@@ -187,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				AC000001 /* Giffer.app */,
-				893B7FFA2F9E4F3B000E9BF3 /* GifferShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,28 +130,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		893B7FF92F9E4F3B000E9BF3 /* GifferShareExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 893B80092F9E4F3C000E9BF3 /* Build configuration list for PBXNativeTarget "GifferShareExtension" */;
-			buildPhases = (
-				893B7FF62F9E4F3B000E9BF3 /* Sources */,
-				893B7FF72F9E4F3B000E9BF3 /* Frameworks */,
-				893B7FF82F9E4F3B000E9BF3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				893B7FFB2F9E4F3B000E9BF3 /* GifferShareExtension */,
-			);
-			name = GifferShareExtension;
-			packageProductDependencies = (
-			);
-			productName = GifferShareExtension;
-			productReference = 893B7FFA2F9E4F3B000E9BF3 /* GifferShareExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		AF000001 /* Giffer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1000001 /* Build configuration list for PBXNativeTarget "Giffer" */;
@@ -232,12 +137,10 @@
 				B0000001 /* Sources */,
 				AD000001 /* Frameworks */,
 				B0000002 /* Resources */,
-				893B80052F9E4F3C000E9BF3 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				893B80032F9E4F3C000E9BF3 /* PBXTargetDependency */,
 			);
 			name = Giffer;
 			productName = Giffer;
@@ -251,12 +154,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2640;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
-					893B7FF92F9E4F3B000E9BF3 = {
-						CreatedOnToolsVersion = 26.4.1;
-					};
 					AF000001 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -276,19 +176,11 @@
 			projectRoot = "";
 			targets = (
 				AF000001 /* Giffer */,
-				893B7FF92F9E4F3B000E9BF3 /* GifferShareExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		893B7FF82F9E4F3B000E9BF3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B0000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -301,14 +193,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		893B7FF62F9E4F3B000E9BF3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA000031 /* SharedConstants.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B0000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,79 +211,12 @@
 				AA00000D /* TrimSliderView.swift in Sources */,
 				AA00000E /* EditorTool.swift in Sources */,
 				AA000020 /* AboutView.swift in Sources */,
-				AA000030 /* SharedConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		893B80032F9E4F3C000E9BF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 893B7FF92F9E4F3B000E9BF3 /* GifferShareExtension */;
-			targetProxy = 893B80022F9E4F3C000E9BF3 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		893B80062F9E4F3C000E9BF3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = GifferShareExtension/GifferShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = GifferShareExtension/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ca.pfaj.giffer.GifferShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		893B80072F9E4F3C000E9BF3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = GifferShareExtension/GifferShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = GifferShareExtension/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ca.pfaj.giffer.GifferShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		B3000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -526,7 +343,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "giffer 2";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Giffer/Giffer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -557,7 +373,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "giffer 2";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Giffer/Giffer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -586,15 +401,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		893B80092F9E4F3C000E9BF3 /* Build configuration list for PBXNativeTarget "GifferShareExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				893B80062F9E4F3C000E9BF3 /* Debug */,
-				893B80072F9E4F3C000E9BF3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		B1000001 /* Build configuration list for PBXNativeTarget "Giffer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

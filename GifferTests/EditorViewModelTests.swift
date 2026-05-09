@@ -10,7 +10,6 @@ struct EditorViewModelTests {
     func defaults() {
         let vm = EditorViewModel()
         #expect(vm.livePhoto == nil)
-        #expect(vm.sharedVideoURL == nil)
         #expect(vm.extractedFrames.isEmpty)
         #expect(vm.exportedData == nil)
         #expect(vm.isExtracting == false)
@@ -20,16 +19,6 @@ struct EditorViewModelTests {
         #expect(vm.config.resolutionScale == 1.0)
         #expect(vm.config.playbackMode == .forward)
         #expect(vm.config.cropRect == nil)
-    }
-
-    @Test("loadFromVideoURL clears livePhoto and sets sharedVideoURL")
-    func loadVideoSwitchesSource() {
-        let vm = EditorViewModel()
-        let url = URL(fileURLWithPath: "/tmp/whatever.mov")
-        vm.loadFromVideoURL(url)
-        #expect(vm.sharedVideoURL == url)
-        #expect(vm.livePhoto == nil)
-        #expect(vm.config.fps == 12) // resets to defaults
     }
 
     @Test("scaledDimensions accounts for crop and resolution scale")

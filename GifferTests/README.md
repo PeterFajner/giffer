@@ -23,5 +23,4 @@ The tests aren't yet attached to a target in `Giffer.xcodeproj`. To enable them:
 - `TestSupport.swift` — fixture builders shared across tests (mock `CGImage`s, etc.).
 - `PlaybackModeTests.swift` — `GIFEncoder.applyPlaybackMode` (forward / reverse / bounce).
 - `GIFEncoderTests.swift` — `GIFEncoder.encode` round-trip (validates magic bytes, frame count, crop, progress).
-- `SharedConstantsTests.swift` — App Group identifiers, share-callback URL roundtrip, file cleanup logic.
-- `EditorViewModelTests.swift` — defaults, source-switching, `scaledDimensions` math, `canShare` gating.
+- `EditorViewModelTests.swift` — defaults, `scaledDimensions` math, `canShare` gating.
