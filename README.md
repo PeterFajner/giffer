@@ -1,14 +1,12 @@
 # Giffer
 
-Convert iOS Live Photos into animated GIFs, right on your device.
+Convert iOS Live Photos into animated GIFs.
 
 ## Features
 
-- Pick a Live Photo from the in-app picker
 - Trim, adjust frame rate (6–24 fps), resize, and crop
-- Three playback modes: forward, reverse, and bounce
-- Live preview while editing
-- Export as a standard GIF and share anywhere
+- Playback: forward, reverse, bounce
+- Live preview while editing + estimated file size
 
 ## Privacy
 
@@ -28,10 +26,6 @@ Steps:
 2. Open `Giffer.xcodeproj`
 3. Select the `Giffer` scheme and a target device or simulator
 4. Build and run
-
-## Roadmap
-
-See [ROADMAP.md](ROADMAP.md) for planned features.
 
 ## License
 
