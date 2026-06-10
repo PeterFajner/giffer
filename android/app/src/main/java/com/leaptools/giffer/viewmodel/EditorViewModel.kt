@@ -20,9 +20,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import kotlin.coroutines.coroutineContext
 
 class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -44,6 +46,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var errorMessage by mutableStateOf<String?>(null)
 
+    private var extractJob: Job? = null
     private var encodeJob: Job? = null
     private var reExtractJob: Job? = null
     private var lastShareFile: File? = null
@@ -90,7 +93,11 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
     fun extractFrames() {
         val uri = sourceUri ?: return
-        viewModelScope.launch {
+        // Supersede any in-flight extract/encode — a new request makes their work stale.
+        extractJob?.cancel()
+        encodeJob?.cancel()
+        extractJob = viewModelScope.launch {
+            val me = coroutineContext[Job]
             isExtracting = true
             errorMessage = null
             exportedData = null
@@ -104,8 +111,10 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 throw e
             } catch (e: Exception) {
                 errorMessage = userMessage("Couldn't read this motion photo.", e)
+            } finally {
+                // Only clear the spinner if a newer extraction hasn't taken over.
+                if (extractJob === me) isExtracting = false
             }
-            isExtracting = false
         }
     }
 
@@ -122,12 +131,13 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun encode() {
         val frames = extractedFrames
         if (frames.isEmpty()) return
+        val me = coroutineContext[Job]
         isEncoding = true
         errorMessage = null
         val cfg = config
         try {
             val data = withContext(Dispatchers.Default) {
-                GifEncoder.encode(frames, cfg)
+                GifEncoder.encode(frames, cfg) { ensureActive() }
             }
             exportedData = data
         } catch (e: CancellationException) {
@@ -136,7 +146,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         } catch (e: Exception) {
             errorMessage = userMessage("Couldn't encode the GIF.", e)
         } finally {
-            isEncoding = false
+            if (encodeJob === me) isEncoding = false
         }
     }
 
@@ -205,6 +215,7 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
     override fun onCleared() {
         super.onCleared()
+        extractJob?.cancel()
         encodeJob?.cancel()
         reExtractJob?.cancel()
         lastShareFile?.delete()

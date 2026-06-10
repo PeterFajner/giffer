@@ -220,6 +220,7 @@ class AnimatedGifEncoder {
             delayMs: Int,
             quality: Int = 10,
             onProgress: (Float) -> Unit = {},
+            checkActive: () -> Unit = {},
         ): ByteArray {
             val bos = ByteArrayOutputStream()
             val enc = AnimatedGifEncoder()
@@ -228,6 +229,7 @@ class AnimatedGifEncoder {
             enc.setDelay(delayMs)
             enc.start(bos)
             frames.forEachIndexed { i, frame ->
+                checkActive() // bail out promptly if a newer encode superseded this one
                 enc.addFrame(frame)
                 onProgress((i + 1).toFloat() / frames.size)
             }
