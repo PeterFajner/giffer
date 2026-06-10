@@ -42,18 +42,23 @@ It syncs your **working tree** (uncommitted changes included), builds on panoram
 and installs to the emulator. Watch the result at <http://panoramix:6080>. Overrides:
 `GIFFER_REMOTE_HOST`, `GIFFER_EMU_ADB`.
 
-## Managing the emulator container
+## Start / stop the emulator
+
+The container does **not** auto-start (restart policy `no`), so after a panoramix reboot you
+bring it up yourself:
 
 ```bash
-ssh panoramix docker ps                       # status
+ssh panoramix docker start android-emulator   # start (emulator cold-boots in ~1 min)
+ssh panoramix docker stop  android-emulator   # stop
+ssh panoramix docker ps -a                    # status (include stopped)
 ssh panoramix docker logs -f android-emulator # logs
-ssh panoramix docker restart android-emulator # restart (app + state persist)
 ssh panoramix docker rm -f android-emulator   # tear down (loses installed apps/state)
 ```
 
-It has `--restart unless-stopped`, so it comes back automatically after a host reboot (the
-emulator cold-boots in ~1 min). Installed apps and emulator state persist across restarts;
-only `docker rm` wipes them.
+Installed apps and emulator state persist across stop/start; only `docker rm` wipes them.
+After `docker start`, wait for boot (`docker exec android-emulator adb shell getprop
+sys.boot_completed` → `1`) before `adb connect panoramix:5555`. To make it auto-start on
+reboot again: `docker update --restart=unless-stopped android-emulator`.
 
 ## One-time server setup (already done — kept here for reproducibility)
 
@@ -61,7 +66,8 @@ On panoramix (Ubuntu, x86_64, has `/dev/kvm` + Docker):
 
 ```bash
 # --- emulator container (budtmo/docker-android) ---
-docker run -d --name android-emulator --restart unless-stopped \
+# (restart policy left at the default 'no' — start/stop it manually; see "Start / stop")
+docker run -d --name android-emulator \
   -p 100.98.75.10:6080:6080 -p 100.98.75.10:5555:5555 \
   -e EMULATOR_DEVICE="Samsung Galaxy S10" -e WEB_VNC=true \
   --device /dev/kvm \
