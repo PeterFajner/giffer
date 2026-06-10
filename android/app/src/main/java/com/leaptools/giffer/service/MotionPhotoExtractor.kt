@@ -11,6 +11,7 @@ import androidx.media3.exoplayer.MetadataRetriever
 import androidx.media3.extractor.metadata.mp4.MotionPhotoMetadata
 import com.leaptools.giffer.model.GifConfiguration
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.RandomAccessFile
@@ -140,7 +141,7 @@ object MotionPhotoExtractor {
         val cached = cacheToFile(context, sourceUri)
         val mp4 = extractEmbeddedVideo(context, sourceUri, cached)
         try {
-            extractFramesFromVideo(mp4, config, onProgress)
+            extractFramesFromVideo(mp4, config, onProgress) { ensureActive() }
         } finally {
             cached.delete()
             mp4.delete()
@@ -151,6 +152,7 @@ object MotionPhotoExtractor {
         mp4: File,
         config: GifConfiguration,
         onProgress: (Float) -> Unit,
+        checkActive: () -> Unit = {},
     ): ExtractionResult {
         val retriever = MediaMetadataRetriever()
         try {
@@ -190,6 +192,7 @@ object MotionPhotoExtractor {
 
             val frames = ArrayList<Bitmap>(frameCount)
             for (i in 0 until frameCount) {
+                checkActive() // stop decoding promptly if a newer extraction superseded this one
                 val tUs = ((trimStartSec + i * frameDuration) * 1_000_000).toLong()
                 val frame = retriever.getScaledFrameAtTime(
                     tUs,

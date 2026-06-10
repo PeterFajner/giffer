@@ -18,9 +18,10 @@ object GifEncoder {
         frames: List<Bitmap>,
         config: GifConfiguration,
         onProgress: (Float) -> Unit = {},
+        checkActive: () -> Unit = {},
     ): ByteArray {
         val cropped = config.cropRect?.let { rect ->
-            frames.mapNotNull { crop(it, rect) }
+            frames.mapNotNull { checkActive(); crop(it, rect) }
         } ?: frames
 
         val ordered = applyPlaybackMode(cropped, config.playbackMode)
@@ -32,6 +33,7 @@ object GifEncoder {
             delayMs = delayMs,
             quality = 10,
             onProgress = onProgress,
+            checkActive = checkActive,
         )
     }
 
