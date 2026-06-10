@@ -1,6 +1,7 @@
 package com.leaptools.giffer.ui
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Crop
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.mutableStateListOf
@@ -46,6 +49,7 @@ import com.leaptools.giffer.model.EditorTool
 import com.leaptools.giffer.model.PlaybackMode
 import com.leaptools.giffer.ui.theme.GifferYellow
 import com.leaptools.giffer.viewmodel.EditorViewModel
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 private const val DEFAULT_FPS = 12
@@ -54,6 +58,7 @@ private const val DEFAULT_SCALE = 1.0f
 @Composable
 fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val enabledTools = remember { mutableStateListOf<EditorTool>() }
     var selectedTool by remember { mutableStateOf<EditorTool?>(null) }
 
@@ -82,6 +87,16 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
     ) {
         TopBar(
             viewModel = viewModel,
+            onSave = {
+                scope.launch {
+                    val ok = viewModel.saveToGallery()
+                    Toast.makeText(
+                        context,
+                        if (ok) "Saved to Photos" else "Couldn't save the GIF",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
             onShare = {
                 val file = viewModel.writeShareFile() ?: return@TopBar
                 val uri = FileProvider.getUriForFile(
@@ -196,7 +211,7 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
 }
 
 @Composable
-private fun TopBar(viewModel: EditorViewModel, onShare: () -> Unit) {
+private fun TopBar(viewModel: EditorViewModel, onSave: () -> Unit, onShare: () -> Unit) {
     val config = viewModel.config
     Row(
         modifier = Modifier
@@ -250,6 +265,24 @@ private fun TopBar(viewModel: EditorViewModel, onShare: () -> Unit) {
             fontSize = 12.sp,
         )
         Spacer(Modifier.size(10.dp))
+
+        // Save-to-Photos button
+        Box(
+            modifier = Modifier
+                .size(width = 36.dp, height = 30.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(Color.White.copy(alpha = 0.12f))
+                .clickable(enabled = viewModel.canShare, onClick = onSave),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                Icons.Filled.Download,
+                contentDescription = "Save to Photos",
+                tint = if (viewModel.canShare) Color.White else Color.White.copy(alpha = 0.4f),
+                modifier = Modifier.size(18.dp),
+            )
+        }
+        Spacer(Modifier.size(6.dp))
 
         // Share button
         Box(

@@ -1,8 +1,11 @@
 package com.leaptools.giffer.viewmodel
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.text.format.Formatter
 import android.util.Size
 import androidx.compose.runtime.getValue
@@ -13,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.leaptools.giffer.model.GifConfiguration
 import com.leaptools.giffer.service.GifEncoder
 import com.leaptools.giffer.service.MotionPhotoExtractor
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -96,6 +100,8 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 originalSize = result.originalSize
                 videoDuration = result.durationSeconds
                 scheduleEncode()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorMessage = userMessage("Couldn't read this motion photo.", e)
             }
@@ -124,10 +130,14 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 GifEncoder.encode(frames, cfg)
             }
             exportedData = data
+        } catch (e: CancellationException) {
+            // A newer encode superseded this one (debounced edits) — not a failure.
+            throw e
         } catch (e: Exception) {
             errorMessage = userMessage("Couldn't encode the GIF.", e)
+        } finally {
+            isEncoding = false
         }
-        isEncoding = false
     }
 
     /** Debounced re-extract (for trim / resolution changes that require re-sampling frames). */
@@ -138,6 +148,43 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             delay(500)
             extractFrames()
         }
+    }
+
+    /**
+     * Saves the current GIF into the shared photo collection (Pictures/Giffer) so it appears in
+     * Google Photos / the gallery. Returns true on success. Android 10+ scoped storage means no
+     * runtime permission is needed for the app's own MediaStore inserts.
+     */
+    suspend fun saveToGallery(): Boolean = withContext(Dispatchers.IO) {
+        val data = exportedData ?: return@withContext false
+        val resolver = getApplication<Application>().contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "giffer-${System.currentTimeMillis()}.gif")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/gif")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Giffer")
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
+        }
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+        val uri = resolver.insert(collection, values) ?: return@withContext false
+        try {
+            resolver.openOutputStream(uri)?.use { it.write(data) }
+                ?: return@withContext false
+        } catch (e: Exception) {
+            resolver.delete(uri, null, null)
+            return@withContext false
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            values.clear()
+            values.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(uri, values, null, null)
+        }
+        true
     }
 
     /** Writes the current GIF to a shareable file and returns it (for FileProvider). */
