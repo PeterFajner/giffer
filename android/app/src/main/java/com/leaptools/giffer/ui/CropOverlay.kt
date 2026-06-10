@@ -3,6 +3,7 @@ package com.leaptools.giffer.ui
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +50,8 @@ fun CropOverlay(
     Canvas(
         modifier = modifier
             .fillMaxSize()
+            // Crop handles can reach the screen edges; opt out of the system back-swipe there.
+            .systemGestureExclusion()
             .pointerInput(imageAspectRatio) {
                 val hitPx = 28.dp.toPx() // generous touch radius around each handle
                 detectDragGestures(
