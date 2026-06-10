@@ -2,8 +2,8 @@ package com.leaptools.giffer
 
 import android.content.Context
 import android.net.Uri
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.leaptools.giffer.model.GifConfiguration
 import com.leaptools.giffer.service.GifEncoder
 import com.leaptools.giffer.service.MotionPhotoExtractor
@@ -24,12 +24,15 @@ import java.io.File
 @RunWith(AndroidJUnit4::class)
 class MotionPhotoExtractorInstrumentedTest {
 
-    private val context: Context get() = ApplicationProvider.getApplicationContext()
+    // App-under-test context (for cacheDir + the extractor); the bundled test assets live in
+    // the instrumentation APK, so they're read from the test context, not the app context.
+    private val context: Context get() = InstrumentationRegistry.getInstrumentation().targetContext
+    private val testContext: Context get() = InstrumentationRegistry.getInstrumentation().context
 
     /** Copies a bundled test asset to a cache file and returns a file:// Uri for it. */
     private fun assetUri(name: String): Uri {
         val out = File(context.cacheDir, name)
-        context.assets.open("motionphoto/$name").use { input ->
+        testContext.assets.open("motionphoto/$name").use { input ->
             out.outputStream().use { input.copyTo(it) }
         }
         return Uri.fromFile(out)
