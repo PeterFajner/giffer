@@ -10,6 +10,15 @@ A Kotlin + Jetpack Compose port of the iOS Giffer app.
 - Live preview while editing + estimated file size
 - 100% on-device — nothing leaves your phone
 
+## Screenshots
+
+Captured on a Pixel 5 by the `EditorUiScreenshotTest` running on Firebase Test Lab, against a
+real Pixel Motion Photo.
+
+| Editor | Crop | Trim |
+| --- | --- | --- |
+| ![Editor](docs/screenshots/editor.png) | ![Crop](docs/screenshots/crop.png) | ![Trim](docs/screenshots/trim.png) |
+
 ## How it differs from the iOS app
 
 iOS Live Photos store the still and the video as two separate resources of one library
