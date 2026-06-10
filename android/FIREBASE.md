@@ -43,9 +43,23 @@ List available devices/versions:
 gcloud firebase test android models list
 ```
 
-Results print a console URL with per-device pass/fail, logcat, and video. The two tests
-assert that each sample Motion Photo yields decoded frames with correct dimensions and a
-valid `GIF89a`.
+Results print a console URL with per-device pass/fail, logcat, and video. The tests:
+- `MotionPhotoExtractorInstrumentedTest` — asserts each sample Motion Photo (Pixel + Samsung)
+  yields decoded frames with correct dimensions and a valid `GIF89a`.
+- `EditorUiScreenshotTest` — renders the real editor against an extracted Motion Photo and
+  captures screenshots of the editor, crop mode, and the trim tool.
+
+### Screenshots
+
+`EditorUiScreenshotTest` writes PNGs to the app's external files dir, and the runner pulls
+that directory into the results bucket (`--directories-to-pull`). Download them with:
+
+```bash
+# grab the bucket path printed as "Raw results will be stored in your GCS bucket at ..."
+gsutil cp '<bucket>/**screenshots/*.png' .
+```
+
+They land under `<device>/artifacts/sdcard/Android/data/com.leaptools.giffer/files/screenshots/`.
 
 ## Quick smoke alternative (no test APK)
 

@@ -70,6 +70,14 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
     val canShare: Boolean
         get() = exportedData != null && !isEncoding
 
+    /** Injects already-extracted frames so UI tests can render the editor deterministically. */
+    @androidx.annotation.VisibleForTesting
+    fun injectExtractedForTest(frames: List<Bitmap>, size: Size, duration: Double) {
+        extractedFrames = frames
+        originalSize = size
+        videoDuration = duration
+    }
+
     fun loadMotionPhoto(uri: Uri) {
         sourceUri = uri
         config = GifConfiguration()
