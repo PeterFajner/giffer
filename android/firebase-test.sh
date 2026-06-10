@@ -27,4 +27,5 @@ gcloud firebase test android run \
   --app "$APP" \
   --test "$TEST" \
   --timeout 5m \
+  --directories-to-pull /sdcard/Android/data/com.leaptools.giffer/files/screenshots \
   "$@"
