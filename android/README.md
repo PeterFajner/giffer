@@ -53,6 +53,14 @@ toolchain (JDK 17 + Android command-line tools) and how to run an emulator on a 
 ./gradlew installDebug       # install to a connected device/emulator
 ```
 
+### Testing without a local emulator
+
+- **[FIREBASE.md](FIREBASE.md)** — automated extraction + UI-screenshot tests on real Firebase
+  Test Lab devices (`./firebase-test.sh`).
+- **[REMOTE.md](REMOTE.md)** — a persistent emulator + build server on a home server (panoramix),
+  reachable over Tailscale: build on the Mac, run on the server, watch it in a browser
+  (`./remote-build.sh`).
+
 ## License
 
 [MPL-2.0](../LICENSE) © Peter Fajner. The bundled GIF encoder derives from Anthony Dekker's
