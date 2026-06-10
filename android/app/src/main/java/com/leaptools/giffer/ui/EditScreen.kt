@@ -75,8 +75,13 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
     val hasCrop = cropRect.left > 0.01f || cropRect.top > 0.01f ||
         cropRect.right < 0.99f || cropRect.bottom < 0.99f
 
-    fun pushCropToConfig() {
-        viewModel.config = viewModel.config.copy(cropRect = if (hasCrop) cropRect else null)
+    // Compute the crop from the passed rect, not the captured `hasCrop` val: CropOverlay's
+    // onCropChange is captured once in its pointerInput, so a closure over `hasCrop` would be
+    // stale (always false) and never actually commit the crop.
+    fun pushCropToConfig(rect: Rect) {
+        val cropped = rect.left > 0.01f || rect.top > 0.01f ||
+            rect.right < 0.99f || rect.bottom < 0.99f
+        viewModel.config = viewModel.config.copy(cropRect = if (cropped) rect else null)
         viewModel.scheduleEncode()
     }
 
@@ -130,7 +135,7 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
                     imageAspectRatio = viewModel.imageAspectRatio,
                     onCropChange = {
                         cropRect = it
-                        pushCropToConfig()
+                        pushCropToConfig(it)
                     },
                     modifier = Modifier.padding(16.dp),
                 )
@@ -192,8 +197,9 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
                 }
             },
             onResetCrop = {
-                cropRect = Rect(0f, 0f, 1f, 1f)
-                pushCropToConfig()
+                val full = Rect(0f, 0f, 1f, 1f)
+                cropRect = full
+                pushCropToConfig(full)
             },
             onTrimChange = { s, e ->
                 viewModel.config = viewModel.config.copy(trimStart = s, trimEnd = e)
