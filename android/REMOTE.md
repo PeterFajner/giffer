@@ -67,9 +67,13 @@ On panoramix (Ubuntu, x86_64, has `/dev/kvm` + Docker):
 ```bash
 # --- emulator container (budtmo/docker-android) ---
 # (restart policy left at the default 'no' — start/stop it manually; see "Start / stop")
+# Nexus 5 (1080x1920 @ 480dpi) + 4 cores / 4 GB: panoramix has no usable GPU for the
+# emulator, so rendering is software (swiftshader) — a lower-res device is much faster than a
+# 1440x3040 one. Bump/lower the device or -cores/-memory to taste.
 docker run -d --name android-emulator \
   -p 100.98.75.10:6080:6080 -p 100.98.75.10:5555:5555 \
-  -e EMULATOR_DEVICE="Samsung Galaxy S10" -e WEB_VNC=true \
+  -e EMULATOR_DEVICE="Nexus 5" -e WEB_VNC=true \
+  -e EMULATOR_ADDITIONAL_ARGS="-cores 4 -memory 4096 -no-boot-anim" \
   --device /dev/kvm \
   budtmo/docker-android:emulator_14.0
 
