@@ -9,3 +9,7 @@ captures/
 .cxx/
 *.apk
 *.aab
+
+# Third-party Motion Photo samples for instrumentation tests — fetched on demand
+# via fetch-test-assets.sh, not committed.
+app/src/androidTest/assets/motionphoto/
