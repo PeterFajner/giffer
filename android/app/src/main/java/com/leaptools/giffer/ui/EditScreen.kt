@@ -1,5 +1,6 @@
 package com.leaptools.giffer.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,11 +42,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.foundation.clickable
 import com.leaptools.giffer.model.EditorTool
 import com.leaptools.giffer.model.PlaybackMode
@@ -70,6 +76,27 @@ fun EditScreen(viewModel: EditorViewModel, onBack: () -> Unit) {
 
     var isCropMode by remember { mutableStateOf(false) }
     var cropRect by remember { mutableStateOf(Rect(0f, 0f, 1f, 1f)) }
+
+    // systemGestureExclusion is capped at 200dp/edge, which can't cover the full-height crop
+    // overlay, so the edge back/forward swipe still fires while dragging handles. Going
+    // immersive (hide the bars, reveal-on-swipe) for the duration of crop mode suppresses the
+    // system edge gestures entirely; restore the bars when leaving crop mode / the screen.
+    val view = LocalView.current
+    DisposableEffect(isCropMode) {
+        val controller = (view.context as? Activity)?.window?.let {
+            WindowCompat.getInsetsController(it, view)
+        }
+        if (controller != null) {
+            if (isCropMode) {
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+            } else {
+                controller.show(WindowInsetsCompat.Type.systemBars())
+            }
+        }
+        onDispose { controller?.show(WindowInsetsCompat.Type.systemBars()) }
+    }
 
     val config = viewModel.config
     val hasCrop = cropRect.left > 0.01f || cropRect.top > 0.01f ||
