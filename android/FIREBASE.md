@@ -30,6 +30,12 @@ device-runs per day — enough for this.
 
 ## Run
 
+`firebase-test.sh` builds the APKs **on panoramix** (the Mac no longer has the Android SDK —
+see [REMOTE.md](REMOTE.md)): it rsyncs the working tree, fetches the test assets and builds
+`assembleDebug assembleDebugAndroidTest` on the server, pulls both APKs back, and submits them
+to Test Lab with `gcloud` (which still runs here). Override the build host with
+`GIFFER_REMOTE_HOST`.
+
 ```bash
 cd android
 ./firebase-test.sh                                  # default device
