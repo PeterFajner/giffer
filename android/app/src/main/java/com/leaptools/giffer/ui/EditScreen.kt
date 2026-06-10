@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Crop
@@ -437,6 +438,7 @@ private fun SpeedSlider(fps: Int, onFpsChange: (Int) -> Unit) {
             onValueChange = { onFpsChange(it.toInt()) },
             valueRange = 6f..24f,
             steps = 24 - 6 - 1,
+            modifier = Modifier.systemGestureExclusion(),
         )
     }
 }
@@ -456,6 +458,7 @@ private fun QualitySlider(viewModel: EditorViewModel, onScaleChange: (Float) -> 
             value = viewModel.config.resolutionScale,
             onValueChange = onScaleChange,
             valueRange = 0.1f..1.0f,
+            modifier = Modifier.systemGestureExclusion(),
         )
     }
 }
