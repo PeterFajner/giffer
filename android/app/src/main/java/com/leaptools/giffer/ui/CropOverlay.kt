@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -16,7 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 private const val MIN_SIZE = 0.05f
@@ -39,16 +42,21 @@ fun CropOverlay(
     var initialRect by remember { mutableStateOf(cropRect) }
     var startPoint by remember { mutableStateOf(Offset.Zero) }
 
+    // Always hit-test against the latest crop rect; capturing the param directly would freeze
+    // it at the rect from first composition, so a second drag would jump back to it.
+    val currentCrop by rememberUpdatedState(cropRect)
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(imageAspectRatio) {
+                val hitPx = 28.dp.toPx() // generous touch radius around each handle
                 detectDragGestures(
                     onDragStart = { pos ->
                         val img = aspectFitRect(size.width.toFloat(), size.height.toFloat(), imageAspectRatio)
-                        val cr = cropToPixels(cropRect, img)
-                        activeHandle = hitTest(pos, cr)
-                        initialRect = cropRect
+                        val cr = cropToPixels(currentCrop, img)
+                        activeHandle = hitTest(pos, cr, hitPx)
+                        initialRect = currentCrop
                         startPoint = pos
                     },
                     onDragEnd = { activeHandle = null },
@@ -88,20 +96,24 @@ private fun DrawScope.drawDimmed(cr: Rect) {
 }
 
 private fun DrawScope.drawGridAndHandles(cr: Rect) {
+    // Sizes are in dp so handles stay a usable size on high-density screens.
+    val borderW = 1.dp.toPx()
+    val gridW = 1.dp.toPx()
+
     // Border
-    drawRect(Color.White, topLeft = cr.topLeft, size = Size(cr.width, cr.height), style = androidx.compose.ui.graphics.drawscope.Stroke(1f))
+    drawRect(Color.White, topLeft = cr.topLeft, size = Size(cr.width, cr.height), style = Stroke(borderW))
 
     // Rule of thirds
     val line = Color.White.copy(alpha = 0.25f)
     for (i in 1..2) {
         val f = i / 3f
-        drawLine(line, Offset(cr.left + f * cr.width, cr.top), Offset(cr.left + f * cr.width, cr.bottom), 1f)
-        drawLine(line, Offset(cr.left, cr.top + f * cr.height), Offset(cr.right, cr.top + f * cr.height), 1f)
+        drawLine(line, Offset(cr.left + f * cr.width, cr.top), Offset(cr.left + f * cr.width, cr.bottom), gridW)
+        drawLine(line, Offset(cr.left, cr.top + f * cr.height), Offset(cr.right, cr.top + f * cr.height), gridW)
     }
 
     // L-shaped corner handles
-    val len = 20f
-    val thick = 3f
+    val len = 22.dp.toPx()
+    val thick = 4.dp.toPx()
     data class Corner(val p: Offset, val hd: Float, val vd: Float)
     val corners = listOf(
         Corner(cr.topLeft, 1f, 1f),
@@ -117,7 +129,7 @@ private fun DrawScope.drawGridAndHandles(cr: Rect) {
     }
 
     // Edge midpoint handles
-    val edgeLen = 36f
+    val edgeLen = 40.dp.toPx()
     drawRect(Color.White, topLeft = Offset(cr.center.x - edgeLen / 2, cr.top - thick / 2), size = Size(edgeLen, thick))
     drawRect(Color.White, topLeft = Offset(cr.center.x - edgeLen / 2, cr.bottom - thick / 2), size = Size(edgeLen, thick))
     drawRect(Color.White, topLeft = Offset(cr.left - thick / 2, cr.center.y - edgeLen / 2), size = Size(thick, edgeLen))
@@ -151,8 +163,7 @@ private fun pixelToNormalized(p: Offset, img: Rect): Offset = Offset(
     (p.y - img.top) / img.height.coerceAtLeast(1f),
 )
 
-private fun hitTest(p: Offset, cr: Rect): Handle {
-    val thresh = 44f / 2
+private fun hitTest(p: Offset, cr: Rect, thresh: Float): Handle {
     val corners = listOf(
         Handle.TL to cr.topLeft,
         Handle.TR to Offset(cr.right, cr.top),

@@ -19,6 +19,8 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +53,12 @@ fun TrimSlider(
     val density = LocalDensity.current
     val handlePx = with(density) { handleWidth.toPx() }
 
+    // Read the latest trim values from inside the long-lived gesture coroutine; capturing the
+    // composable params directly would freeze them at their initial values and reset the
+    // handle you aren't dragging.
+    val curStart by rememberUpdatedState(trimStart)
+    val curEnd by rememberUpdatedState(trimEnd)
+
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
@@ -68,17 +76,22 @@ fun TrimSlider(
                 .fillMaxSize()
                 .pointerInput(usable) {
                     if (usable <= 1f) return@pointerInput
-                    detectDragGestures { change, _ ->
+                    var draggingLeft = true
+                    detectDragGestures(
+                        onDragStart = { pos ->
+                            // Lock onto the nearer handle for the whole drag so a fast drag
+                            // can't hop to the other handle mid-gesture.
+                            val curLeft = handlePx + (curStart * usable).toFloat()
+                            val curRight = handlePx + (curEnd * usable).toFloat()
+                            draggingLeft = abs(pos.x - curLeft) <= abs(pos.x - curRight)
+                        },
+                    ) { change, _ ->
                         change.consume()
-                        val x = change.position.x
-                        val curLeft = handlePx + (trimStart * usable).toFloat()
-                        val curRight = handlePx + (trimEnd * usable).toFloat()
-                        if (abs(x - curLeft) <= abs(x - curRight)) {
-                            val v = ((x - handlePx) / usable).toDouble().coerceIn(0.0, trimEnd - 0.02)
-                            onTrimChange(v, trimEnd)
+                        val frac = ((change.position.x - handlePx) / usable).toDouble()
+                        if (draggingLeft) {
+                            onTrimChange(frac.coerceIn(0.0, curEnd - 0.02), curEnd)
                         } else {
-                            val v = ((x - handlePx) / usable).toDouble().coerceIn(trimStart + 0.02, 1.0)
-                            onTrimChange(trimStart, v)
+                            onTrimChange(curStart, frac.coerceIn(curStart + 0.02, 1.0))
                         }
                     }
                 },
