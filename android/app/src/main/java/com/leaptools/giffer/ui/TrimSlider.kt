@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -63,7 +64,10 @@ fun TrimSlider(
         modifier = modifier
             .fillMaxWidth()
             .height(barHeight)
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            // The handles sit at the screen edges; opt out of the system back-swipe gesture
+            // there so dragging the start/end handle isn't hijacked as a "back".
+            .systemGestureExclusion(),
     ) {
         val widthPx = with(density) { maxWidth.toPx() }
         val usable = (widthPx - handlePx * 2).coerceAtLeast(1f)
