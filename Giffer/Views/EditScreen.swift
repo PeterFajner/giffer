@@ -3,6 +3,8 @@ import SwiftUI
 struct EditScreen: View {
     @Bindable var viewModel: EditorViewModel
 
+    @Environment(\.dismiss) private var dismiss
+
     @State private var enabledTools: Set<EditorTool> = []
     @State private var selectedTool: EditorTool? = nil
 
@@ -60,6 +62,9 @@ struct EditScreen: View {
         .onChange(of: viewModel.config.trimEnd) { _, _ in scheduleReExtract() }
         .onChange(of: viewModel.config.fps) { _, _ in viewModel.scheduleEncode() }
         .onChange(of: viewModel.config.playbackMode) { _, _ in viewModel.scheduleEncode() }
+        .onChange(of: viewModel.outOfMemoryPhotoCount) { _, newValue in
+            if newValue != nil { dismiss() }
+        }
         .onAppear { restoreToolStates() }
     }
 
@@ -93,6 +98,25 @@ struct EditScreen: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .top) {
+            if viewModel.showNonConsecutiveToast {
+                Text("Non-consecutive Live Photos")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(.black.opacity(0.72), in: Capsule())
+                    .padding(.top, 20)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .task {
+                        try? await Task.sleep(for: .seconds(2))
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            viewModel.showNonConsecutiveToast = false
+                        }
+                    }
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.showNonConsecutiveToast)
     }
 
     // MARK: - Top Bar

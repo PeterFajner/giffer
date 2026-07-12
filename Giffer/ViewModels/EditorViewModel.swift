@@ -1,11 +1,12 @@
 import SwiftUI
+import AVFoundation
 import Photos
 import PhotosUI
 import Observation
 
 @Observable
 final class EditorViewModel {
-    var livePhoto: PHLivePhoto?
+    var livePhotos: [PHLivePhoto] = []
     var config = GIFConfiguration()
     var extractedFrames: [CGImage] = []
     var originalSize: CGSize = .zero
@@ -15,6 +16,19 @@ final class EditorViewModel {
     var isExtracting = false
     var isEncoding = false
     var errorMessage: String? = nil
+
+    /// Set once after loading when the selection wasn't a continuous burst;
+    /// the editor shows a brief toast and clears it.
+    var showNonConsecutiveToast = false
+
+    /// Set to the selected-photo count when extraction would exhaust memory.
+    /// Drives the editor to pop back to the picker, which shows a toast.
+    var outOfMemoryPhotoCount: Int? = nil
+
+    /// Stitched asset + its backing temp files, cached so trim/quality
+    /// re-extractions reuse the composition instead of re-stitching.
+    private var stitchedAsset: AVAsset?
+    private var stitchTempURLs: [URL] = []
 
     private var encodeTask: Task<Void, Never>?
 
@@ -53,30 +67,47 @@ final class EditorViewModel {
         if let url = lastShareTempURL {
             try? FileManager.default.removeItem(at: url)
         }
+        for url in stitchTempURLs {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 
     private static func userMessage(_ friendly: String, error: Error) -> String {
         "\(friendly)\n\(error.localizedDescription)"
     }
 
-    func loadLivePhoto(_ photo: PHLivePhoto) {
-        livePhoto = photo
+    func loadLivePhotos(_ photos: [PHLivePhoto]) {
+        clearStitchCache()
+        livePhotos = photos
         config = GIFConfiguration()
         Task {
-            await extractFrames()
+            await extractFrames(initialLoad: true)
         }
     }
 
     @MainActor
-    func extractFrames() async {
-        guard let livePhoto else { return }
+    func extractFrames(initialLoad: Bool = false) async {
+        guard !livePhotos.isEmpty else { return }
         isExtracting = true
         errorMessage = nil
         exportedData = nil
 
         do {
+            let asset: AVAsset
+            if let cached = stitchedAsset {
+                asset = cached
+            } else {
+                let stitch = try await LivePhotoStitcher.stitch(livePhotos)
+                stitchedAsset = stitch.asset
+                stitchTempURLs = stitch.tempURLs
+                asset = stitch.asset
+                if initialLoad && !stitch.isConsecutive {
+                    showNonConsecutiveToast = true
+                }
+            }
+
             let result = try await LivePhotoExtractor.extractFrames(
-                from: livePhoto,
+                from: asset,
                 config: config,
                 progress: { _ in }
             )
@@ -84,11 +115,22 @@ final class EditorViewModel {
             originalSize = result.originalSize
             videoDuration = result.duration
             scheduleEncode()
+        } catch LivePhotoExtractor.ExtractionError.insufficientMemory {
+            // Hand off to the picker: it pops this screen and shows a toast.
+            outOfMemoryPhotoCount = livePhotos.count
         } catch {
             errorMessage = Self.userMessage(
                 "Couldn't read this Live Photo.", error: error)
         }
         isExtracting = false
+    }
+
+    private func clearStitchCache() {
+        for url in stitchTempURLs {
+            try? FileManager.default.removeItem(at: url)
+        }
+        stitchTempURLs = []
+        stitchedAsset = nil
     }
 
     func scheduleEncode() {

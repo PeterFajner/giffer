@@ -9,7 +9,7 @@ struct EditorViewModelTests {
     @Test("fresh viewModel has expected defaults")
     func defaults() {
         let vm = EditorViewModel()
-        #expect(vm.livePhoto == nil)
+        #expect(vm.livePhotos.isEmpty)
         #expect(vm.extractedFrames.isEmpty)
         #expect(vm.exportedData == nil)
         #expect(vm.isExtracting == false)

@@ -23,6 +23,7 @@
 		AA00000D /* TrimSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000D /* TrimSliderView.swift */; };
 		AA00000E /* EditorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000E /* EditorTool.swift */; };
 		AA000020 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* AboutView.swift */; };
+		AA000021 /* LivePhotoStitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* LivePhotoStitcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		AB000005 /* CropOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropOverlayView.swift; sourceTree = "<group>"; };
 		AB000006 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
 		AB000007 /* LivePhotoExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoExtractor.swift; sourceTree = "<group>"; };
+		AB000021 /* LivePhotoStitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoStitcher.swift; sourceTree = "<group>"; };
 		AB000008 /* GIFEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFEncoder.swift; sourceTree = "<group>"; };
 		AB000009 /* SizeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeEstimator.swift; sourceTree = "<group>"; };
 		AB00000A /* GIFConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFConfiguration.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				AB000007 /* LivePhotoExtractor.swift */,
+				AB000021 /* LivePhotoStitcher.swift */,
 				AB000008 /* GIFEncoder.swift */,
 				AB000009 /* SizeEstimator.swift */,
 			);
@@ -204,6 +207,7 @@
 				AA000005 /* CropOverlayView.swift in Sources */,
 				AA000006 /* EditorViewModel.swift in Sources */,
 				AA000007 /* LivePhotoExtractor.swift in Sources */,
+				AA000021 /* LivePhotoStitcher.swift in Sources */,
 				AA000008 /* GIFEncoder.swift in Sources */,
 				AA000009 /* SizeEstimator.swift in Sources */,
 				AA00000A /* GIFConfiguration.swift in Sources */,
