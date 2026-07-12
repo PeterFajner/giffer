@@ -351,6 +351,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Giffer;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Giffer needs permission to save GIFs to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Giffer needs access to your photo library to select Live Photos.";
@@ -381,6 +382,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Giffer;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Giffer needs permission to save GIFs to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Giffer needs access to your photo library to select Live Photos.";
